@@ -30,12 +30,11 @@ for i in range(100):
         t=system("""
         asm -c "amd64" "{}" -f raw > /tmp/shellcode.bin
         start=$(date +%s)
-        ./babyjail_level11 /flag < /tmp/shellcode.bin 1>/dev/null 2>/dev/null
+        timeout 2s ./babyjail_level11 /flag < /tmp/shellcode.bin 1>/dev/null 2>/dev/null
         end=$(date +%s)
-        #echo "Elapsed time: $(($end-$start)) s"
         exit  $(($end-$start))
         """.format(shellcode.format(i,j))) // 0x100
-        if t>=4:
+        if t>=2:
             t=1
         else:
             t=0
