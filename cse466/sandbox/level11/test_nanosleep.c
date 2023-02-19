@@ -3,11 +3,14 @@
 
 int main()
 {
-   struct timespec tim, tim2;
-   tim.tv_sec = 1;
-   tim.tv_nsec = 500000000L;
-
-   if(nanosleep(&tim , &tim2) < 0 )   
+/*
+struct __kernel_timespec {
+	__kernel_time64_t       tv_sec;                 // seconds
+	long long               tv_nsec;                // nanoseconds 
+};.  
+*/
+   long long req[2]={5,0};
+   if(nanosleep((struct timespec *)req , NULL) < 0 )   
    {
       printf("Nano sleep system call failed \n");
       return -1;
