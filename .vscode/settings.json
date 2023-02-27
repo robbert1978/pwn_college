@@ -1,3 +1,4 @@
 {
-    "git.terminalAuthentication": true
+    "git.terminalAuthentication": true,
+    "launch-terminal-cmd.defaultLaunchType": "new"
 }
